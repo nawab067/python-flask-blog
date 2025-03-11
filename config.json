@@ -1,0 +1,23 @@
+{
+  "params":
+  {
+
+    "local_server": true,
+    "local_uri": "mysql://root:@localhost/coding thunder",
+    "prod_uri": "mysql://root:@localhost/coding thunder",
+    "fb_uri": "https://facebook.com/codingthunder",
+    "gh_uri": "https://github.com/codingthunder",
+    "tw_uri": "https://twitter.com/codingthunder",
+    "blog_name": "Nawab",
+    "tag_line": "A blog liked by Nawab",
+    "gmail-user": "partzy09@gmail.com",
+    "gmail-password": "hptzupgserueigjp",
+    "about_tut": " Hi my name is  Nawab haider i am create a flask app development and i am a good boy",
+    "no_of_post": 2,
+    "login_img": "login.svg",
+    "admin_user": "Nawab",
+    "admin_password": "subscribe",
+    "location_upload": "C:\\Users\\Masab Haider\\Desktop\\python_project\\static\\assets"
+
+  }
+}
