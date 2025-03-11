@@ -98,6 +98,7 @@ def delete(srno):
 
 @app.route("/uploader", methods=['GET', 'POST'])
 def upload():
+    # Image Upload Function
     if 'user' in session and session['user'] == params['admin_user']:
         if request.method == 'POST':
             f = request.files['file1']
