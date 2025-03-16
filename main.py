@@ -48,7 +48,7 @@ class Contact(db.Model):
     msg = db.Column(db.String(200), nullable=False)
     date = db.Column(db.String(12), nullable=True)
 
-
+# Post Model
 class Post(db.Model):
     __tablename__ = 'posts'
     srno = db.Column(db.Integer, primary_key=True, autoincrement=True)
