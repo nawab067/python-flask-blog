@@ -1,83 +1,62 @@
 {% extends "layout.html" %}
 {% block body %}
-        <!-- Page Header-->
-       <header class="masthead" style="background-image: url('{{ url_for('static',filename='assets/img/admin.jpg')}} ')">
-
-            <div class="container position-relative px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
-                        <div class="site-heading">
-                            <h1>Admin Pannel</h1>
-                            <span class="subheading">Manage your post and change them</span>
-                        </div>
-                    </div>
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('{{ url_for('static',filename='assets/img/admin.jpg')}} ')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="site-heading">
+                    <h1>Admin Panel</h1>
+                    <span class="subheading">Manage your posts and edit them</span>
                 </div>
             </div>
-        </header>
-
-        <!-- Main Content-->
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <a href="/dashboard"><button  class="btn btn-primary text-uppercase">Dashboard home</button></a>
-                    <a href="/logout"><button  class="btn btn-primary text-uppercase">Log out</button></a>
-                    <hr>
-                    <!-- Post preview-->
-                    <h1>add/edit post</h1>
-                     <form id="contactForm" data-sb-form-api-token="API_TOKEN" action="/edit/{{post.srno}}" method="post">
-                                <div class="form-floating">
-                                    <input class="form-control" id="title" name="title" type="text" value= "{{post.title}}"placeholder="Enter your name..." data-sb-validations="required" />
-                                    <label>title</label>
-                                    <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
-                                </div>
-                                <div class="form-floating">
-                                    <input class="form-control" id="sub_title" name="sub_title" value="{{post.sub_title}}" type="text" placeholder="Enter your sub title"/>
-                                    <label>Tag line</label>
-                                    
-                                </div>
-                                <div class="form-floating">
-                                    <input class="form-control" id="slug" name= "slug" value="{{post.slug}}" type="text" placeholder="Enter your slug"/>
-                                    <label>Slug</label>
-                                    
-                                </div>
-                                <div class="form-floating">
-                                    <textarea class="form-control" id="content" name= "content"  placeholder="Enter your content here..." style="height: 12rem" data-sb-validations="required">
-                                        {{post.content}}
-                                    </textarea>
-                                    <label>content</label>
-                                    
-                                </div>
-
-                                 <div class="form-floating">
-                                    <textarea class="form-control" id="img_file" name= "img_file"value="{{post.img_file}}" placeholder="Enter your image file " style="height: 12rem" data-sb-validations="required">{{post.img_file}}</textarea>
-                                    <label>Image file</label>
-                                  
-                                </div>
-
-                                <br />
-                                <!-- Submit success message-->
-                                <!---->
-                                <!-- This is what your users will see when the form-->
-                                <!-- has successfully submitted-->
-                                <div class="d-none" id="submitSuccessMessage">
-                                    <div class="text-center mb-3">
-                                        <div class="fw-bolder">Form submission successful!</div>
-                                        To activate this form, sign up at
-                                        <br />
-                                        <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
-                                    </div>
-                                </div>
-                                <!-- Submit error message-->
-                                <!---->
-                                <!-- This is what your users will see when there is-->
-                                <!-- an error submitting the form-->
-                                <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
-                                <!-- Submit Button-->
-                                <button class="btn btn-primary text-uppercase" id="submitButton" type="submit">Submit</button>
-
-                            </form>
-                    
-            </div>
         </div>
-     
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            <a href="/dashboard"><button class="btn btn-primary text-uppercase">Dashboard Home</button></a>
+            <a href="/logout"><button class="btn btn-primary text-uppercase">Log Out</button></a>
+            <hr>
+
+            <h1>{% if post.srno %} Edit Post {% else %} Add New Post {% endif %}</h1>
+
+            <!-- Dynamically set form action -->
+            <form id="contactForm" data-sb-form-api-token="API_TOKEN" action="{% if post.srno %}/edit/{{ post.srno }}{% else %}/add{% endif %}" method="post">
+                <div class="form-floating">
+                    <input class="form-control" id="title" name="title" type="text" value="{{ post.title if post else '' }}" placeholder="Enter title" required />
+                    <label>Title</label>
+                </div>
+
+                <div class="form-floating">
+                    <input class="form-control" id="sub_title" name="sub_title" type="text" value="{{ post.sub_title if post else '' }}" placeholder="Enter sub title" />
+                    <label>Tag Line</label>
+                </div>
+
+                <div class="form-floating">
+                    <input class="form-control" id="slug" name="slug" type="text" value="{{ post.slug if post else '' }}" placeholder="Enter slug" />
+                    <label>Slug</label>
+                </div>
+
+                <div class="form-floating">
+                    <textarea class="form-control" id="content" name="content" placeholder="Enter content" style="height: 12rem" required>{{ post.content if post else '' }}</textarea>
+                    <label>Content</label>
+                </div>
+
+                <div class="form-floating">
+                    <input class="form-control" id="img_file" name="img_file" type="text" value="{{ post.img_file if post else '' }}" placeholder="Enter image file URL" />
+                    <label>Image File</label>
+                </div>
+
+                <br />
+                <!-- Submit Button -->
+                <button class="btn btn-primary text-uppercase" id="submitButton" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

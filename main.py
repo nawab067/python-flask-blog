@@ -51,7 +51,7 @@ class Contact(db.Model):
 
 class Post(db.Model):
     __tablename__ = 'posts'
-    srno = db.Column(db.Integer, primary_key=True)
+    srno = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(80), nullable=False)
     slug = db.Column(db.String(120), nullable=False)
     content = db.Column(db.String(120), nullable=False)
@@ -163,42 +163,54 @@ def dashboard():
     return render_template('form.html', params=params)
 
 
-@app.route("/edit/<string:srno>", methods=['GET', 'POST'])
-def edit(srno):
+@app.route("/add", methods=['GET', 'POST'])
+def add_post():
     if 'user' in session and session['user'] == params['admin_user']:
         if request.method == 'POST':
-            box_title = request.form.get('title')
+            title = request.form.get('title')
             sub_title = request.form.get('sub_title')
             slug = request.form.get('slug')
             content = request.form.get('content')
             img_file = request.form.get('img_file')
-            date = datetime.now()
 
-            if srno == '0':  # New post
-                post = Post(title=box_title, slug=slug, sub_title=sub_title, content=content, img_file=img_file, date=date)
-                db.session.add(post)
-                db.session.commit()
-                return redirect(f"/edit/{post.srno}")  # Redirect to edit the new post
+            new_post = Post(
+                title=title, slug=slug, sub_title=sub_title,
+                content=content, img_file=img_file, date=datetime.now()
+            )
 
-            else:
-                post = Post.query.filter_by(srno=srno).first()
-                if post:
-                    post.title = box_title
-                    post.slug = slug
-                    post.content = content
-                    post.sub_title = sub_title
-                    post.img_file = img_file
-                    post.date = date
-                    db.session.commit()
-                return redirect(f"/edit/{srno}")
+            db.session.add(new_post)
+            db.session.commit()
 
-        post = Post.query.filter_by(srno=srno).first()
+            return redirect(f"/edit/{new_post.srno}")  # Redirect to edit the newly created post
 
-        # If post is None, create an empty object to prevent Jinja errors
+        return render_template('add.html', params=params)  # Render an empty form for adding posts
+
+    return redirect("/dashboard")
+
+
+# Route for editing an existing post
+@app.route("/edit/<int:srno>", methods=['GET', 'POST'])
+def edit_post(srno):
+    if 'user' in session and session['user'] == params['admin_user']:
+        post = Post.query.get(srno)
+
         if not post:
-            post = Post(srno=0, title="", sub_title="", slug="", content="", img_file="", date=datetime.now())
+            return "Post not found", 404  # Handle case where post does not exist
+
+        if request.method == 'POST':
+            post.title = request.form.get('title')
+            post.sub_title = request.form.get('sub_title')
+            post.slug = request.form.get('slug')
+            post.content = request.form.get('content')
+            post.img_file = request.form.get('img_file')
+            post.date = datetime.now()
+
+            db.session.commit()
+            return redirect(f"/edit/{srno}")  # Stay on the same edit page after updating
 
         return render_template('edit.html', params=params, post=post)
+
+    return redirect("/dashboard")
 
 
 
